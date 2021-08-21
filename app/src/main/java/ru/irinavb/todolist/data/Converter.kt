@@ -1,6 +1,7 @@
 package ru.irinavb.todolist.data
 
 import androidx.room.TypeConverter
+import ru.irinavb.todolist.data.models.Priority
 
 class Converter {
 

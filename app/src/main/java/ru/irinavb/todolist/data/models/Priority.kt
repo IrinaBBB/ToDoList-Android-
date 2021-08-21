@@ -1,4 +1,4 @@
-package ru.irinavb.todolist.data
+package ru.irinavb.todolist.data.models
 
 enum class Priority {
     HIGH,

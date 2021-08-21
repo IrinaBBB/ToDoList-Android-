@@ -2,7 +2,6 @@ package ru.irinavb.todolist.data.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import ru.irinavb.todolist.data.models.Priority
 
 @Entity(tableName = "todo_table")
 data class ToDoData(

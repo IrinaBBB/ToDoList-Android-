@@ -1,5 +1,6 @@
 package ru.irinavb.todolist.fragments.update
 
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.*
@@ -45,10 +46,26 @@ class UpdateFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.menu_save) {
-            updateItem()
+        when (item.itemId) {
+            R.id.menu_save -> updateItem()
+            R.id.menu_delete -> confirmItemRemoval()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun confirmItemRemoval() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setPositiveButton("Yes") {_, _ ->
+            toDoViewModel.deleteData(args.currentItem)
+            Toast.makeText(activity, "Successfully removed: '${args.currentItem.title}'", Toast
+                .LENGTH_SHORT).show()
+            findNavController().navigate(R.id.action_updateFragment_to_listFragment)
+        }
+        builder.setNegativeButton("No") {_, _ ->}
+        builder.setTitle("Delete ${args.currentItem.title}?")
+        builder.setTitle("Are you sure you want to delete '${args.currentItem.title}'?")
+        builder.create().show()
+
     }
 
     private fun updateItem() {
@@ -69,7 +86,7 @@ class UpdateFragment : Fragment() {
             // Hide the keyboard.
             val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view?.windowToken, 0)
-            
+
             findNavController().navigate(R.id.action_updateFragment_to_listFragment)
         } else {
             Toast.makeText(requireContext(), "Please fill out all fields!", Toast.LENGTH_LONG)

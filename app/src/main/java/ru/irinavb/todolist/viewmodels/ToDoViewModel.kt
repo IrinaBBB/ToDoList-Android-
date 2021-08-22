@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.irinavb.todolist.data.ToDoDatabase
 import ru.irinavb.todolist.data.models.ToDoData
@@ -31,6 +32,12 @@ class ToDoViewModel(application: Application): AndroidViewModel(application) {
     fun deleteData(toDoData: ToDoData) {
         viewModelScope.launch {
             repository.deleteData(toDoData)
+        }
+    }
+
+    fun deleteAll() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteAll()
         }
     }
 }

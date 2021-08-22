@@ -1,19 +1,15 @@
-package ru.irinavb.todolist.fragments.list
+package ru.irinavb.todolist.fragments.list.adapters
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import ru.irinavb.todolist.R
-import ru.irinavb.todolist.data.models.Priority
 import ru.irinavb.todolist.data.models.ToDoData
 import ru.irinavb.todolist.databinding.RowLayoutBinding
 
 class ToDoAdapter : RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder>() {
 
-    private var dataList = emptyList<ToDoData>()
+    var dataList = emptyList<ToDoData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ToDoViewHolder {
         return ToDoViewHolder.from(parent)
@@ -26,10 +22,11 @@ class ToDoAdapter : RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder>() {
 
     override fun getItemCount() = dataList.size
 
-    @SuppressLint("NotifyDataSetChanged")
     fun setData(toDoData: List<ToDoData>) {
+        val toDoDiffUtil = ToDoDiffUtil(dataList, toDoData)
+        val toDoDiffResult = DiffUtil.calculateDiff(toDoDiffUtil)
         this.dataList = toDoData
-        this.notifyDataSetChanged()
+        toDoDiffResult.dispatchUpdatesTo(this)
     }
 
     class ToDoViewHolder(private val binding: RowLayoutBinding) : RecyclerView.ViewHolder(binding.root) {

@@ -14,7 +14,7 @@ import ru.irinavb.todolist.data.models.ToDoData
 
 class SharedViewModel(application: Application): AndroidViewModel(application)  {
 
-    val emptyDatabase: MutableLiveData<Boolean> = MutableLiveData(true)
+    val emptyDatabase: MutableLiveData<Boolean> = MutableLiveData(false)
 
     fun checkIfDatabaseEmpty(dataList: List<ToDoData>) {
         emptyDatabase.value = dataList.isEmpty()

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import ru.irinavb.todolist.R
 import ru.irinavb.todolist.data.models.Priority
@@ -22,6 +23,11 @@ class ToDoAdapter: RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder>() {
     override fun onBindViewHolder(holder: ToDoViewHolder, position: Int) {
         holder.binding.titleText.text = dataList[position].title
         holder.binding.descriptionText.text = dataList[position].description
+        holder.binding.rowBackground.setOnClickListener {
+            val action = ListFragmentDirections
+                .actionListFragmentToUpdateFragment(dataList[position])
+            holder.itemView.findNavController().navigate(action)
+        }
 
         when(dataList[position].priority) {
             Priority.HIGH -> holder.binding.priorityIndicator

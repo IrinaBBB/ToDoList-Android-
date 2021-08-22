@@ -1,21 +1,16 @@
 package ru.irinavb.todolist.fragments.add
 
 import android.content.Context
-import android.icu.text.CaseMap
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import ru.irinavb.todolist.R
-import ru.irinavb.todolist.data.models.Priority
 import ru.irinavb.todolist.data.models.ToDoData
 import ru.irinavb.todolist.databinding.FragmentAddBinding
-import ru.irinavb.todolist.databinding.FragmentListBinding
 import ru.irinavb.todolist.viewmodels.SharedViewModel
 import ru.irinavb.todolist.viewmodels.ToDoViewModel
 

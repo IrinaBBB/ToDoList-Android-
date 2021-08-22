@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator
 import ru.irinavb.todolist.data.models.ToDoData
 import ru.irinavb.todolist.fragments.list.adapters.ToDoAdapter
 import ru.irinavb.todolist.viewmodels.SharedViewModel
@@ -56,6 +57,10 @@ class ListFragment : Fragment() {
     private fun setUpRecyclerView() {
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+        binding.recyclerView.itemAnimator = SlideInUpAnimator().apply {
+            addDuration = 300
+        }
+
         swipeToDelete(binding.recyclerView)
     }
 

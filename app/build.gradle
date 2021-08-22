@@ -64,4 +64,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0-alpha03"
     // LiveData
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.0-alpha03"
+
+    // RecyclerView Animation
+    implementation 'jp.wasabeef:recyclerview-animators:4.0.2'
 }

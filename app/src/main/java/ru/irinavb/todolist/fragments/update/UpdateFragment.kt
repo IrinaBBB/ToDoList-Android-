@@ -32,15 +32,15 @@ class UpdateFragment : Fragment() {
     ): View {
         _binding = FragmentUpdateBinding.inflate(inflater, container, false)
         binding.args = args
-        
+
 
 
         setHasOptionsMenu(true)
 
-        binding.currentTitleEditText.setText(args.currentItem.title)
-        binding.currentDescriptionEditText.setText(args.currentItem.description)
-        binding.currentPrioritiesSpinner.setSelection(sharedViewModel.parsePriorityToInt(args
-            .currentItem.priority))
+//        binding.currentTitleEditText.setText(args.currentItem.title)
+//        binding.currentDescriptionEditText.setText(args.currentItem.description)
+//        binding.currentPrioritiesSpinner.setSelection(sharedViewModel.parsePriorityToInt(args
+//            .currentItem.priority))
         binding.currentPrioritiesSpinner.onItemSelectedListener = sharedViewModel.listener
 
         return binding.root
@@ -75,7 +75,7 @@ class UpdateFragment : Fragment() {
 
     private fun updateItem() {
         val title = binding.currentTitleEditText.text.toString()
-        val description = binding.currentTitleEditText.text.toString()
+        val description = binding.currentDescriptionEditText.text.toString()
         val getPriority = binding.currentPrioritiesSpinner.selectedItem.toString()
 
         val validation = sharedViewModel.verifyDataFromUser(title, description)
@@ -97,5 +97,10 @@ class UpdateFragment : Fragment() {
             Toast.makeText(requireContext(), "Please fill out all fields!", Toast.LENGTH_LONG)
                 .show()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

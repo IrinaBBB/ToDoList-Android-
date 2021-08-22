@@ -18,7 +18,9 @@ import ru.irinavb.todolist.viewmodels.ToDoViewModel
 
 class UpdateFragment : Fragment() {
 
-    private lateinit var binding: FragmentUpdateBinding
+    private var _binding: FragmentUpdateBinding? = null
+    private val binding get() = _binding!!
+
     private val args by navArgs<UpdateFragmentArgs>()
     private val sharedViewModel: SharedViewModel by viewModels()
     private val toDoViewModel: ToDoViewModel by viewModels()
@@ -28,7 +30,10 @@ class UpdateFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentUpdateBinding.inflate(inflater, container, false)
+        _binding = FragmentUpdateBinding.inflate(inflater, container, false)
+        binding.args = args
+        
+
 
         setHasOptionsMenu(true)
 

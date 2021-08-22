@@ -11,35 +11,17 @@ import ru.irinavb.todolist.data.models.Priority
 import ru.irinavb.todolist.data.models.ToDoData
 import ru.irinavb.todolist.databinding.RowLayoutBinding
 
-class ToDoAdapter: RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder>() {
+class ToDoAdapter : RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder>() {
 
-    var dataList = emptyList<ToDoData>()
+    private var dataList = emptyList<ToDoData>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ToDoViewHolder {
-        return ToDoViewHolder(RowLayoutBinding.inflate(LayoutInflater.from(parent.context),
-            parent, false))
+        return ToDoViewHolder.from(parent)
     }
 
     override fun onBindViewHolder(holder: ToDoViewHolder, position: Int) {
-        holder.binding.titleText.text = dataList[position].title
-        holder.binding.descriptionText.text = dataList[position].description
-        holder.binding.rowBackground.setOnClickListener {
-            val action = ListFragmentDirections
-                .actionListFragmentToUpdateFragment(dataList[position])
-            holder.itemView.findNavController().navigate(action)
-        }
-
-        when(dataList[position].priority) {
-            Priority.HIGH -> holder.binding.priorityIndicator
-                .setCardBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color
-                    .red))
-            Priority.MEDIUM -> holder.binding.priorityIndicator
-                .setCardBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color
-                    .yellow))
-            Priority.LOW -> holder.binding.priorityIndicator
-                .setCardBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color
-                    .green))
-        }
+        val currentItem = dataList[position]
+        holder.bind(currentItem)
     }
 
     override fun getItemCount() = dataList.size
@@ -50,6 +32,18 @@ class ToDoAdapter: RecyclerView.Adapter<ToDoAdapter.ToDoViewHolder>() {
         this.notifyDataSetChanged()
     }
 
-    inner class ToDoViewHolder(val binding: RowLayoutBinding)
-        :RecyclerView.ViewHolder(binding.root)
+    class ToDoViewHolder(private val binding: RowLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(toDoData: ToDoData) {
+            binding.toDoData = toDoData
+            binding.executePendingBindings()
+        }
+
+        companion object {
+            fun from(parent: ViewGroup): ToDoViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = RowLayoutBinding.inflate(layoutInflater, parent, false)
+                return ToDoViewHolder(binding)
+            }
+        }
+    }
 }

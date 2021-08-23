@@ -3,6 +3,7 @@ package ru.irinavb.todolist.fragments.list
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -13,8 +14,8 @@ import ru.irinavb.todolist.databinding.FragmentListBinding
 
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator
 import ru.irinavb.todolist.data.models.ToDoData
@@ -23,7 +24,7 @@ import ru.irinavb.todolist.viewmodels.SharedViewModel
 import ru.irinavb.todolist.viewmodels.ToDoViewModel
 
 
-class ListFragment : Fragment() {
+class ListFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private var _binding: FragmentListBinding? = null
     private val binding get() = _binding!!
@@ -56,7 +57,9 @@ class ListFragment : Fragment() {
 
     private fun setUpRecyclerView() {
         binding.recyclerView.adapter = adapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+        binding.recyclerView.layoutManager = StaggeredGridLayoutManager(2,
+            StaggeredGridLayoutManager
+            .VERTICAL)
         binding.recyclerView.itemAnimator = SlideInUpAnimator().apply {
             addDuration = 300
         }
@@ -83,18 +86,28 @@ class ListFragment : Fragment() {
         )
         snackBar.setAction("Undo") {
             toDoViewModel.insertData(deletedItem)
-            adapter.notifyItemChanged(position)
         }
         snackBar.show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.list_fragment_menu, menu)
+
+        val search = menu.findItem(R.id.menu_search)
+        val searchView = search.actionView as? SearchView
+        searchView?.isSubmitButtonEnabled = true
+        searchView?.setOnQueryTextListener(this)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_delete_all -> confirmRemoval()
+            R.id.menu_priority_high -> toDoViewModel.sortByHighPriority.observe(this, {
+                adapter.setData(it)
+            })
+            R.id.menu_priority_low -> toDoViewModel.sortByLowPriority.observe(this, {
+                adapter.setData(it)
+            })
         }
         return super.onOptionsItemSelected(item)
     }
@@ -115,5 +128,29 @@ class ListFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        if (query != null) {
+            searchThroughDatabase(query)
+        }
+        return true
+    }
+
+    override fun onQueryTextChange(query: String?): Boolean {
+        if (query != null) {
+            searchThroughDatabase(query)
+        }
+        return true
+    }
+
+    private fun searchThroughDatabase(query: String) {
+        val searchQuery = "%$query%"
+
+        toDoViewModel.searchDatabase(searchQuery).observe(this, Observer {
+            it?.let {
+                adapter.setData(it)
+            }
+        })
     }
 }

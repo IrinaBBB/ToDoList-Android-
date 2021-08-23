@@ -20,6 +20,8 @@ import com.google.android.material.snackbar.Snackbar
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator
 import ru.irinavb.todolist.data.models.ToDoData
 import ru.irinavb.todolist.fragments.list.adapters.ToDoAdapter
+import ru.irinavb.todolist.utils.hideKeyboard
+import ru.irinavb.todolist.utils.observeOnce
 import ru.irinavb.todolist.viewmodels.SharedViewModel
 import ru.irinavb.todolist.viewmodels.ToDoViewModel
 
@@ -52,6 +54,10 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener {
         })
 
         setHasOptionsMenu(true)
+
+        // hide keyboard
+        hideKeyboard(requireActivity())
+
         return binding.root
     }
 
@@ -73,14 +79,14 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener {
                 val deletedItem = adapter.dataList[viewHolder.adapterPosition]
                 toDoViewModel.deleteData(deletedItem)
                 adapter.notifyItemRemoved(viewHolder.adapterPosition)
-                restoreDeletedData(viewHolder.itemView, deletedItem, viewHolder.adapterPosition)
+                restoreDeletedData(viewHolder.itemView, deletedItem)
             }
         }
         val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallback)
         itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 
-    private fun restoreDeletedData(view: View, deletedItem: ToDoData, position: Int) {
+    private fun restoreDeletedData(view: View, deletedItem: ToDoData) {
         val snackBar = Snackbar.make(
             view, "Deleted '${deletedItem.title}", Snackbar.LENGTH_LONG
         )
@@ -102,10 +108,10 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_delete_all -> confirmRemoval()
-            R.id.menu_priority_high -> toDoViewModel.sortByHighPriority.observe(this, {
+            R.id.menu_priority_high -> toDoViewModel.sortByHighPriority.observe(viewLifecycleOwner, {
                 adapter.setData(it)
             })
-            R.id.menu_priority_low -> toDoViewModel.sortByLowPriority.observe(this, {
+            R.id.menu_priority_low -> toDoViewModel.sortByLowPriority.observe(viewLifecycleOwner, {
                 adapter.setData(it)
             })
         }
@@ -147,7 +153,7 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener {
     private fun searchThroughDatabase(query: String) {
         val searchQuery = "%$query%"
 
-        toDoViewModel.searchDatabase(searchQuery).observe(this, Observer {
+        toDoViewModel.searchDatabase(searchQuery).observeOnce(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.setData(it)
             }

@@ -53,8 +53,8 @@ class AddFragment : Fragment() {
         val mDescription = binding.descriptionEditText.text.toString()
 
         // Hide the keyboard.
-        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view?.windowToken, 0)
+//        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//        imm.hideSoftInputFromWindow(view?.windowToken, 0)
 
         val validation = sharedViewModel.verifyDataFromUser(mTitle, mDescription)
 

@@ -83,8 +83,8 @@ class UpdateFragment : Fragment() {
             toDoViewModel.updateData(updateItem)
             Toast.makeText(requireContext(), "Successfully updated!", Toast.LENGTH_LONG).show()
             // Hide the keyboard.
-            val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(view?.windowToken, 0)
+//            val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//            imm.hideSoftInputFromWindow(view?.windowToken, 0)
 
             findNavController().navigate(R.id.action_updateFragment_to_listFragment)
         } else {
